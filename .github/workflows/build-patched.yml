@@ -41,12 +41,12 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      - name: Build debug APK
-        run: ./gradlew assembleDebug
+      - name: Build alpha APK
+        run: ./gradlew assembleAlpha
 
       - name: Upload APK
         uses: actions/upload-artifact@v7
         with:
           name: URLCheck-patched
-          path: app/build/outputs/apk/debug/*.apk
+          path: app/build/outputs/apk/alpha/*.apk
           retention-days: 30
