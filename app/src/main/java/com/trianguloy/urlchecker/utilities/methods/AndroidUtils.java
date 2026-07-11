@@ -209,7 +209,10 @@ public interface AndroidUtils {
     static Set<String> getLinksFromText(CharSequence text) {
         var links = new HashSet<String>();
         var matcher = Patterns.WEB_URL.matcher(text);
-        while (matcher.find()) links.add(matcher.group());
+        while (matcher.find()) {
+            var url = matcher.group();
+            if (url.length() >= 7) links.add(url);
+        }
         return links;
     }
 
