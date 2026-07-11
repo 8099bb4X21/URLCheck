@@ -8,12 +8,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout patched branch
         uses: actions/checkout@v7
         with:
           ref: patched
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch upstream master
         run: |
@@ -26,6 +29,7 @@ jobs:
 
       - name: Push rebased patched branch
         run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/8099bb4X21/URLCheck.git
           git push origin patched --force-with-lease
 
       - name: Set up JDK 17
