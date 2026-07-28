@@ -89,6 +89,9 @@ if (secret('RELEASE_STORE_FILE')) {
             release {
                 signingConfig signingConfigs.release
             }
+            alpha {
+                signingConfig signingConfigs.release
+            }
         }
     }
 } else {
