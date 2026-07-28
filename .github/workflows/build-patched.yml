@@ -41,8 +41,20 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
 
+      - name: Create release store file
+        run: |
+          RELEASE_STORE_FILE=$(readlink -f release_store_file)
+          echo -n "$RELEASE_STORE_FILE_ENCRYPTED" | base64 --decode > $RELEASE_STORE_FILE
+          echo "RELEASE_STORE_FILE=$RELEASE_STORE_FILE" >> "$GITHUB_ENV"
+        env:
+          RELEASE_STORE_FILE_ENCRYPTED: ${{ secrets.RELEASE_STORE_FILE }}
+
       - name: Build alpha APK
         run: ./gradlew assembleAlpha
+        env:
+          RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v7
