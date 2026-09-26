@@ -1,8 +1,6 @@
 name: Build patched URLCheck
 
 on:
-  schedule:
-    - cron: '0 6 * * *'
   workflow_dispatch:
 
 jobs:
@@ -17,20 +15,6 @@ jobs:
           ref: patched
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Fetch upstream master
-        run: |
-          git remote add upstream https://github.com/TrianguloY/URLCheck.git
-          git fetch upstream master
-
-      - name: Rebase patched on upstream/master
-        run: |
-          git rebase upstream/master
-
-      - name: Push rebased patched branch
-        run: |
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/8099bb4X21/URLCheck.git
-          git push origin patched --force-with-lease
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
@@ -56,9 +40,9 @@ jobs:
           RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
           RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v7
+      - name: Upload APK to release (raw file, no zip)
+        uses: softprops/action-gh-release@v2
         with:
-          name: URLCheck-patched
-          path: app/build/outputs/apk/alpha/*.apk
-          retention-days: 30
+          tag_name: patched-build-${{ github.run_number }}
+          name: Patched build ${{ github.run_number }}
+          files: app/build/outputs/apk/alpha/*.apk
