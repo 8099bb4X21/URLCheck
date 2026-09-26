@@ -40,9 +40,9 @@ jobs:
           RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
           RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
 
-      - name: Upload APK to release (raw file, no zip)
-        uses: softprops/action-gh-release@v2
+      - name: Upload APK
+        uses: actions/upload-artifact@v7
         with:
-          tag_name: patched-build-${{ github.run_number }}
-          name: Patched build ${{ github.run_number }}
-          files: app/build/outputs/apk/alpha/*.apk
+          name: URLCheck-patched
+          path: app/build/outputs/apk/alpha/*.apk
+          if-no-files-found: error
