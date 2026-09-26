@@ -34,7 +34,9 @@ jobs:
           RELEASE_STORE_FILE_ENCRYPTED: ${{ secrets.RELEASE_STORE_FILE }}
 
       - name: Build alpha APK
-        run: ./gradlew assembleAlpha
+        run: |
+          ./gradlew assembleAlpha
+          echo "filename=$(jq -r '.elements[0].outputFile' app/build/outputs/apk/alpha/output-metadata.json)" >> "$GITHUB_ENV"
         env:
           RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
           RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
@@ -43,6 +45,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v7
         with:
-          name: URLCheck-patched
-          path: app/build/outputs/apk/alpha/*.apk
+          name: ${{ env.filename }}
+          path: app/build/outputs/apk/alpha/${{ env.filename }}
+          archive: false
           if-no-files-found: error
